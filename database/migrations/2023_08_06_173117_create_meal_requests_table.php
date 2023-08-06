@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('meal_requests', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('title');
+            $table->string('price');
+            $table->integer('number');
+            $table->string('user');
+            $table->string('location');
+            $table->string('phone');
             $table->timestamps();
         });
     }

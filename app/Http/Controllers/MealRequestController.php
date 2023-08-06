@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMealRequestRequest;
 use App\Http\Requests\UpdateMealRequestRequest;
 use App\Models\MealRequest;
+use Illuminate\Support\Facades\Validator;
 
 class MealRequestController extends Controller
 {
@@ -29,9 +30,28 @@ class MealRequestController extends Controller
      */
     public function store(StoreMealRequestRequest $request)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'price' => 'required',
+            'location' => 'required',
+            'number' => 'required',
+        ]);
+        if (!$validator) {
+            return response()->json([
+                'message' => 'error validating the items'
+            ]);
+        }
 
+        $order = new MealRequest();
+        $order->title = $request->get('title');
+        $order->price = $request->get('price');
+        $order->location = $request->get('location');
+        $order->number = $request->get('number');
+        $order->phone = auth()->user()->phone;
+        $order->user  = auth()->user()->name;
+        $order->save();
+        return response()->json($order);
+    }
     /**
      * Display the specified resource.
      */
