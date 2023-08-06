@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .menu_tab {
+    @apply text-gray-800 cursor-pointer select-none;
+  }
+  .active_menu_tab {
+    @apply rounded-full px-4 py-2 text-white select-none;
+  }
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,700&display=swap');
 body {

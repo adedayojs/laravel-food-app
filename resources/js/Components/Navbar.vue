@@ -1,9 +1,24 @@
+<script setup>
+import { computed } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import { Link } from '@inertiajs/vue3';
+
+const headerClasses = computed(() => {
+    // Replace 'scrollY' with the appropriate property to track scroll position in Inertia
+    return window.scrollY <= 50
+        ? 'bg-white fixed z-50 top-0 left-0 w-full shadow-md transition duration-500'
+        : 'bg-transparent fixed z-50 top-0 left-0 w-full transition duration-500';
+});
+
+</script>
+
 <template>
-    <header class="bg-transparent fixed z-50 top-0 left-0 w-full transition duration-500">
+    <header :class="headerClasses">
         <nav class="flex items-center max-w-screen-xl mx-auto px-6 py-3">
             <!-- {/* left */} -->
             <div class="flex flex-grow">
-                <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
                 <Link :href="route('dashboard')">
                 <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
                 </Link>
@@ -41,78 +56,3 @@
         </nav>
     </header>
 </template>
-
-
-<script setup>
-import { computed, onMounted, onUnmounted, watch } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue'
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-
-const props = defineProps({
-    show: {
-        type: Boolean,
-        default: false,
-    },
-    maxWidth: {
-        type: String,
-        default: '2xl',
-    },
-    closeable: {
-        type: Boolean,
-        default: true,
-    },
-});
-
-const emit = defineEmits(['close']);
-
-watch(
-    () => props.show,
-    () => {
-        if (props.show) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = null;
-        }
-    }
-);
-
-const close = () => {
-    if (props.closeable) {
-        emit('close');
-    }
-};
-
-const closeOnEscape = (e) => {
-    if (e.key === 'Escape' && props.show) {
-        close();
-    }
-};
-
-const onChangeHeader = () => {
-    if (window.scrollY >= 50) {
-        setChangeHeader(true)
-    } else {
-        setChangeHeader(false)
-    }
-}
-
-onMounted(() =>
-    //change header by scrolling
-    window.addEventListener('scroll', onChangeHeader));
-
-onUnmounted(() => {
-    document.removeEventListener('keydown', closeOnEscape);
-    document.body.style.overflow = null;
-});
-
-const maxWidthClass = computed(() => {
-    return {
-        sm: 'sm:max-w-sm',
-        md: 'sm:max-w-md',
-        lg: 'sm:max-w-lg',
-        xl: 'sm:max-w-xl',
-        '2xl': 'sm:max-w-2xl',
-    }[props.maxWidth];
-});
-</script>
